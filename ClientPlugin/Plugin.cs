@@ -11,19 +11,30 @@ namespace ClientPlugin
     // ReSharper disable once UnusedType.Global
     public class Plugin : IPlugin, IDisposable
     {
-        public const string Name = "ClientPluginTemplate";
+        
+        private static Action<string, NLog.LogLevel> PulsarLog;
+        
+        public static readonly string PluginName = ((AssemblyTitleAttribute)Attribute.GetCustomAttribute(
+            Assembly.GetExecutingAssembly(), typeof(AssemblyTitleAttribute))).Title;
+        public static void WriteToPulsarLog(string logMsg, NLog.LogLevel logLevel)
+        {
+            PulsarLog?.Invoke($"[{PluginName}] {logMsg}", logLevel);
+        }
+        
+        // ReSharper disable once MemberCanBePrivate.Global
         public static Plugin Instance { get; private set; }
         private SettingsGenerator settingsGenerator;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         public void Init(object gameInstance)
         {
+            Menu.Utils.CaptureOriginalOverlay();
             Instance = this;
             Instance.settingsGenerator = new SettingsGenerator();
 
-            // TODO: Put your one time initialization code here.
-            Harmony harmony = new Harmony(Name);
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            // Harmony harmony = new Harmony(PluginName);
+
+            Config.Current.ChangeOverlayImage();
         }
 
         public void Dispose()

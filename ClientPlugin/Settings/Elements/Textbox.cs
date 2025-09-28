@@ -21,6 +21,14 @@ namespace ClientPlugin.Settings.Elements
             textBox.TextChanged += box => propertySetter(box.Text);
             textBox.SetToolTip(Description);
 
+            Config.Current.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName != name) return;
+                var newText = (string)propertyGetter();
+                if (textBox.Text != newText)
+                    textBox.Text = newText;
+            };
+
             var label = Tools.Tools.GetLabelOrDefault(name, Label);
             return new List<Control>()
             {
@@ -28,6 +36,7 @@ namespace ClientPlugin.Settings.Elements
                 new Control(textBox, fillFactor: 1f),
             };
         }
+
 
         public List<Type> SupportedTypes { get; } = new List<Type>()
         {
