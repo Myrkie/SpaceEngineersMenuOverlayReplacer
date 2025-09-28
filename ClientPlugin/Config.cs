@@ -12,7 +12,7 @@ namespace ClientPlugin
     {
         #region Options
 
-        private string previewImage = "Textures\\GUI\\Screens\\main_menu_overlay.dds";
+        private string _previewImage = "";
 
         #endregion
 
@@ -26,8 +26,8 @@ namespace ClientPlugin
         [Textbox(description: "Path to custom preview image")]
         public string PreviewImage
         {
-            get => previewImage;
-            set => SetField(ref previewImage, value);
+            get => _previewImage;
+            set => SetField(ref _previewImage, value);
         }
         
         
